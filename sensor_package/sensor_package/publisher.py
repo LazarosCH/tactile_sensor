@@ -2,50 +2,80 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 import time
+import serial
+
 
 class LinePublisher(Node):
     def __init__(self):
         super().__init__('line_publisher')
         self.publisher_ = self.create_publisher(Float32MultiArray, 'line_topic', 10)
+        self.publisher_gt = self.create_publisher(Float32MultiArray, 'groundT_topic', 10)
 
+        self.declare_parameter('sensor_port', '/dev/ttyUSB0')
+        self.declare_parameter('baud_rate', 9600)
+        sensor_port = self.get_parameter('sensor_port').get_parameter_value().string_value
+        baud_rate = self.get_parameter('baud_rate').get_parameter_value().integer_value
 
-        self.file_path = '/home/lazaros/Desktop/rwr/TaskX/23-11-25/r0/r0a5.log'
-        self.timer = self.create_timer(0.1, self.publish_lines_once)
+        self.ser = serial.Serial(sensor_port, baud_rate)
+
+        self.timer = self.create_timer(0.1, self.publish_sensor_readings)
         self.lines = None
         self.index = 0
 
-    def publish_lines_once(self):
-        # Load file on first timer callback
-        if self.lines is None:
+    def publish_sensor_readings(self):
+        msg = Float32MultiArray()
+        msg_gt = Float32MultiArray()
+
+        # line = self.ser.readline().decode().strip()
+        line = self.ser.readline().decode('ascii', errors='ignore').strip()
+        # line_split = line.split(",")
+        if line:
             try:
-                with open(self.file_path, 'r') as f:
-                    self.lines = f.readlines()
-                self.get_logger().info("File loaded, starting line-by-line publishing...")
-            except Exception as e:
-                self.get_logger().error(f"Error reading file: {e}")
-                self.lines = []
+                # msg.data = [int(x) for x in line.split(",")]
+                msg.data = [float(x) for x in line.split(",")]
+                # for i, val in enumerate(msg.data):
+                    # print(f"Value {i}: {val}")
+                msg_gt.data = [msg.data.pop(0)]
+
+
+            except ValueError:
+                print("⚠️ Invalid data received:", line)
+        self.publisher_.publish(msg)
+        self.publisher_gt.publish(msg_gt)
+        self.ser.reset_input_buffer()  # optional: clear remaining old data
+
+    # def publish_lines_once(self):
+    #     # Load file on first timer callback
+    #     if self.lines is None:
+    #         try:
+    #             with open(self.file_path, 'r') as f:
+    #                 self.lines = f.readlines()
+    #             self.get_logger().info("File loaded, starting line-by-line publishing...")
+    #         except Exception as e:
+    #             self.get_logger().error(f"Error reading file: {e}")
+    #             self.lines = []
         
-        if self.index < len(self.lines):
-            original = self.lines[self.index].rstrip('\n')
+    #     if self.index < len(self.lines):
+    #         original = self.lines[self.index].rstrip('\n')
 
-            # --- Extract text after first comma ---
-            if ',' in original:
-                processed = original.split(',', 1)[1]   # keep only after first comma
-            else:
-                processed = ""  # or: processed = original
+    #         # --- Extract text after first comma ---
+    #         if ',' in original:
+    #             processed = original.split(',', 1)[1]   # keep only after first comma
+    #         else:
+    #             processed = ""  # or: processed = original
 
-            float_array = [float(x) for x in processed.split(',')]
+    #         float_array = [float(x) for x in processed.split(',')]
 
-            msg = Float32MultiArray()
-            msg.data = float_array
-            self.publisher_.publish(msg)
+    #         msg = Float32MultiArray()
+    #         msg.data = float_array
+    #         self.publisher_.publish(msg)
 
-            self.get_logger().info(f"Published: {msg.data}")
+    #         self.get_logger().info(f"Published: {msg.data}")
 
-            self.index += 1
-        else:
-            self.get_logger().info("Finished publishing all lines.")
-            self.timer.cancel()
+    #         self.index += 1
+    #     else:
+    #         self.get_logger().info("Finished publishing all lines.")
+    #         self.timer.cancel()
 
 def main(args=None):
     rclpy.init(args=args)

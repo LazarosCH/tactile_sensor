@@ -27,11 +27,11 @@ def generate_launch_description():
                     executable='publisher',
                     name='publisher'
                 ),
-                Node(
-                    package='sensor_package',
-                    executable='groundT_publisher',
-                    name='publisher'
-                )
+                # Node(
+                #     package='sensor_package',
+                #     executable='groundT_publisher',
+                #     name='publisher'
+                # )
             ]
         )
     ])
