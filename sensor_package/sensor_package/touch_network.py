@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 import joblib
 
-USE_LSTM = False
+USE_LSTM = True
 
 class MinimalSubscriber(Node):
     def __init__(self):
@@ -26,8 +26,8 @@ class MinimalSubscriber(Node):
         )
 
         self.buffer = []
-        self.model = keras.models.load_model(f"/home/papaveneti/ros_ws/src/sensor_package/sensor_package/config/model_position.keras")
-        self.x_scaler = joblib.load(f"/home/papaveneti/ros_ws/src/sensor_package/sensor_package/config/x_scaler_position.save")
+        self.model = keras.models.load_model(f"/home/lazaros/Desktop/mike_expirement/Models/New_sensor_6inputs/LSTM/Threshold50_15/model_position.keras")
+        self.x_scaler = joblib.load(f"/home/lazaros/Desktop/mike_expirement/Models/New_sensor_6inputs/LSTM/Threshold50_15/x_scaler_position.save")
         self.time_steps = 15
 
 
@@ -44,7 +44,7 @@ class MinimalSubscriber(Node):
                 #self.buffer.pop(-1)
             if len(self.buffer) == self.time_steps:
                 stacked_ = np.array(self.buffer)  # shape = (time_steps, 12)
-                Dstacked = stacked_ - np.mean(stacked, axis=0)
+                Dstacked = stacked_ - np.mean(stacked_, axis=0)
                 stacked = np.concatenate([stacked_, Dstacked], axis=1)
 
 
@@ -56,10 +56,10 @@ class MinimalSubscriber(Node):
                     # if np.argmax(y_pred)>0:
                         # self.get_logger().info(f"touch{np.argmax(y_pred)}")
                 self.get_logger().info(f"ypred={y_pred}\n")
-
-                msg_out = Float32MultiArray()
-                msg_out.data = y_pred.tolist()  # Flatten in case y_pred is multi-dimensional
-                self.publisher_.publish(msg_out)
+                print(np.argmax(y_pred))
+                # msg_out = Float32MultiArray()
+                # msg_out.data = y_pred.flatten().tolist()  # Flatten in case y_pred is multi-dimensional
+                # self.publisher_.publish(msg_out)
         else:
             data = np.array(data).reshape(1, -1)
             print(data)
