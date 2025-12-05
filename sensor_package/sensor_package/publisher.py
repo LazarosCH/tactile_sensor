@@ -3,6 +3,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 import time
 import serial
+import numpy as np
 
 
 class LinePublisher(Node):
@@ -12,13 +13,13 @@ class LinePublisher(Node):
         self.publisher_gt = self.create_publisher(Float32MultiArray, 'groundT_topic', 10)
 
         self.declare_parameter('sensor_port', '/dev/ttyUSB0')
-        self.declare_parameter('baud_rate', 9600)
+        self.declare_parameter('baud_rate', 19200)
         sensor_port = self.get_parameter('sensor_port').get_parameter_value().string_value
         baud_rate = self.get_parameter('baud_rate').get_parameter_value().integer_value
 
         self.ser = serial.Serial(sensor_port, baud_rate)
 
-        self.timer = self.create_timer(0.1, self.publish_sensor_readings)
+        self.timer = self.create_timer(0.05, self.publish_sensor_readings)
         self.lines = None
         self.index = 0
 
@@ -35,7 +36,13 @@ class LinePublisher(Node):
                 msg.data = [float(x) for x in line.split(",")]
                 # for i, val in enumerate(msg.data):
                     # print(f"Value {i}: {val}")
-                msg_gt.data = [msg.data.pop(0)]
+                # TODO: remove class
+                msg.data.pop(0)
+                msg_gt.data = [msg.data.pop(0)] # weight
+
+                # sum = np.sum( msg.data)
+                # for i in range(len(msg.data)):
+                #     msg.data[i] /= sum
 
 
             except ValueError:
@@ -62,7 +69,7 @@ class LinePublisher(Node):
     #         if ',' in original:
     #             processed = original.split(',', 1)[1]   # keep only after first comma
     #         else:
-    #             processed = ""  # or: processed = original
+    #             processed = ""  # or: procepublisher_ssed = original
 
     #         float_array = [float(x) for x in processed.split(',')]
 
