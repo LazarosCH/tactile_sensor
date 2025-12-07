@@ -26,9 +26,9 @@ class MinimalSubscriber(Node):
         )
 
         self.buffer = []
-        self.model = keras.models.load_model(f"/home/lazaros/Desktop/mike_expirement/Models/New_sensor_6inputs/LSTM/Threshold50_15/model_position.keras")
-        self.x_scaler = joblib.load(f"/home/lazaros/Desktop/mike_expirement/Models/New_sensor_6inputs/LSTM/Threshold50_15/x_scaler_position.save")
-        self.time_steps = 15
+        self.model = keras.models.load_model(f"/home/papaveneti/ros_ws/src/sensor_package/sensor_package/config/model_position.keras")
+        self.x_scaler = joblib.load(f"/home/papaveneti/ros_ws/src/sensor_package/sensor_package/config/x_scaler_position.save")
+        self.time_steps = 10
 
 
     def listener_callback(self, msg):
@@ -56,10 +56,10 @@ class MinimalSubscriber(Node):
                     # if np.argmax(y_pred)>0:
                         # self.get_logger().info(f"touch{np.argmax(y_pred)}")
                 self.get_logger().info(f"ypred={y_pred}\n")
-                print(np.argmax(y_pred))
-                # msg_out = Float32MultiArray()
-                # msg_out.data = y_pred.flatten().tolist()  # Flatten in case y_pred is multi-dimensional
-                # self.publisher_.publish(msg_out)
+                # print(np.argmax(y_pred))
+                msg_out = Float32MultiArray()
+                msg_out.data = y_pred.flatten().tolist()  # Flatten in case y_pred is multi-dimensional
+                self.publisher_.publish(msg_out)
         else:
             data = np.array(data).reshape(1, -1)
             print(data)

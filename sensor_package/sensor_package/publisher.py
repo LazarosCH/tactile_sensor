@@ -5,11 +5,14 @@ import time
 import serial
 import numpy as np
 
+NUM_SAMPLES = 5
 
 class LinePublisher(Node):
+    array : np.ndarray
     def __init__(self):
         super().__init__('line_publisher')
         self.publisher_ = self.create_publisher(Float32MultiArray, 'line_topic', 10)
+        self.publisher_new = self.create_publisher(Float32MultiArray, 'new_line_topic', 10)
         self.publisher_gt = self.create_publisher(Float32MultiArray, 'groundT_topic', 10)
 
         self.declare_parameter('sensor_port', '/dev/ttyUSB0')
@@ -23,8 +26,12 @@ class LinePublisher(Node):
         self.lines = None
         self.index = 0
 
+        self.array = np.zeros((NUM_SAMPLES,6))
+        self.init = False
+
     def publish_sensor_readings(self):
         msg = Float32MultiArray()
+        msg_new = Float32MultiArray()
         msg_gt = Float32MultiArray()
 
         # line = self.ser.readline().decode().strip()
@@ -44,10 +51,38 @@ class LinePublisher(Node):
                 # for i in range(len(msg.data)):
                 #     msg.data[i] /= sum
 
-
             except ValueError:
                 print("⚠️ Invalid data received:", line)
+                return
+
+        print(len(msg.data))
+        if len(msg.data) < 6:
+            return
+        
+        if not self.init:
+            self.init = True
+            for i in range(6):
+                for j in range(NUM_SAMPLES):
+                    self.array[j,i] = msg.data[i]
+        
+        rotated = np.roll(self.array,shift=1, axis=0)
+        # print(rotated.shape)
+        # print(len(msg.data))
+        msg_new.data = [0.0,0.0,0.0,0.0,0.0,0.0]
+        for i in range(6):
+                rotated[0,i] = msg.data[i]
+
+        avg_values = np.average(rotated,axis = 0)   
+        # print(avg_values)
+
+        for i in range(6):
+            msg_new.data[i] = avg_values[i]
+
+        self.array = rotated
+
+
         self.publisher_.publish(msg)
+        self.publisher_new.publish(msg_new)
         self.publisher_gt.publish(msg_gt)
         self.ser.reset_input_buffer()  # optional: clear remaining old data
 
