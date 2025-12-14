@@ -22,13 +22,8 @@ setup(
     entry_points={
         'console_scripts': [
             'publisher = sensor_package.publisher:main',
-            'force_network = sensor_package.Force_network:main',
-            'position_network = sensor_package.position_network:main',
+            'force_network = sensor_package.force_network:main',
             'vizualization = sensor_package.vizualization:main',
-            'Force_network_array = sensor_package.Force_network_array:main',
-            'vizualization_array = sensor_package.vizualization_array:main',
-            'groundT_publisher = sensor_package.publisher_groundTruth:main',
-            'toutch_network = sensor_package.touch_network:main',
         ],
     },
 )
