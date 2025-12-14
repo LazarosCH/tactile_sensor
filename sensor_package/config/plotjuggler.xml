@@ -15,33 +15,33 @@
       <plot flip_y="false" style="Lines" flip_x="false" mode="TimeSeries">
        <range bottom="0.000000" top="700.000000" right="98.789828" left="0.000000"/>
        <limitY min="0" max="700"/>
-       <curve color="#d62728" name="/touch_propability_topic/data[0]"/>
-       <curve color="#1ac938" name="/touch_propability_topic/data[1]"/>
-       <curve color="#ff7f0e" name="/touch_propability_topic/data[2]"/>
-       <curve color="#f14cc1" name="/touch_propability_topic/data[3]"/>
-       <curve color="#9467bd" name="/touch_propability_topic/data[4]"/>
+       <curve color="#d62728" name="/force_estimation_topic/data[0]"/>
+       <curve color="#1ac938" name="/force_estimation_topic/data[1]"/>
+       <curve color="#ff7f0e" name="/force_estimation_topic/data[2]"/>
+       <curve color="#f14cc1" name="/force_estimation_topic/data[3]"/>
+       <curve color="#9467bd" name="/force_estimation_topic/data[4]"/>
       </plot>
      </DockArea>
      <DockArea name="...">
       <plot flip_y="false" style="Lines" flip_x="false" mode="TimeSeries">
        <range bottom="0.000000" top="700.000000" right="98.789828" left="0.000000"/>
        <limitY min="0" max="700"/>
-       <curve color="#17becf" name="/touch_propability_topic/data[5]"/>
-       <curve color="#bcbd22" name="/touch_propability_topic/data[6]"/>
-       <curve color="#1f77b4" name="/touch_propability_topic/data[7]"/>
-       <curve color="#d62728" name="/touch_propability_topic/data[8]"/>
-       <curve color="#1ac938" name="/touch_propability_topic/data[9]"/>
+       <curve color="#17becf" name="/force_estimation_topic/data[5]"/>
+       <curve color="#bcbd22" name="/force_estimation_topic/data[6]"/>
+       <curve color="#1f77b4" name="/force_estimation_topic/data[7]"/>
+       <curve color="#d62728" name="/force_estimation_topic/data[8]"/>
+       <curve color="#1ac938" name="/force_estimation_topic/data[9]"/>
       </plot>
      </DockArea>
      <DockArea name="...">
       <plot flip_y="false" style="Lines" flip_x="false" mode="TimeSeries">
        <range bottom="0.000000" top="700.000000" right="98.789828" left="0.000000"/>
        <limitY min="0" max="700"/>
-       <curve color="#ff7f0e" name="/touch_propability_topic/data[10]"/>
-       <curve color="#f14cc1" name="/touch_propability_topic/data[11]"/>
-       <curve color="#9467bd" name="/touch_propability_topic/data[12]"/>
-       <curve color="#17becf" name="/touch_propability_topic/data[13]"/>
-       <curve color="#bcbd22" name="/touch_propability_topic/data[14]"/>
+       <curve color="#ff7f0e" name="/force_estimation_topic/data[10]"/>
+       <curve color="#f14cc1" name="/force_estimation_topic/data[11]"/>
+       <curve color="#9467bd" name="/force_estimation_topic/data[12]"/>
+       <curve color="#17becf" name="/force_estimation_topic/data[13]"/>
+       <curve color="#bcbd22" name="/force_estimation_topic/data[14]"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -61,33 +61,33 @@
       <plot flip_y="false" style="Lines" flip_x="false" mode="TimeSeries">
        <range bottom="-2.825000" top="325.825000" right="98.746679" left="0.000000"/>
        <limitY/>
-       <curve color="#1f77b4" name="/line_topic/data[0]"/>
-       <curve color="#d62728" name="/line_topic/data[1]"/>
-       <curve color="#1ac938" name="/line_topic/data[2]"/>
-       <curve color="#ff7f0e" name="/line_topic/data[3]"/>
-       <curve color="#f14cc1" name="/line_topic/data[4]"/>
+       <curve color="#1f77b4" name="/raw_signal_topic/data[0]"/>
+       <curve color="#d62728" name="/raw_signal_topic/data[1]"/>
+       <curve color="#1ac938" name="/raw_signal_topic/data[2]"/>
+       <curve color="#ff7f0e" name="/raw_signal_topic/data[3]"/>
+       <curve color="#f14cc1" name="/raw_signal_topic/data[4]"/>
       </plot>
      </DockArea>
      <DockArea name="...">
       <plot flip_y="false" style="Lines" flip_x="false" mode="TimeSeries">
        <range bottom="-5.600000" top="313.600000" right="98.746679" left="0.000000"/>
        <limitY/>
-       <curve color="#9467bd" name="/line_topic/data[5]"/>
-       <curve color="#17becf" name="/line_topic/data[6]"/>
-       <curve color="#bcbd22" name="/line_topic/data[7]"/>
-       <curve color="#1f77b4" name="/line_topic/data[8]"/>
-       <curve color="#d62728" name="/line_topic/data[9]"/>
+       <curve color="#9467bd" name="/raw_signal_topic/data[5]"/>
+       <curve color="#17becf" name="/raw_signal_topic/data[6]"/>
+       <curve color="#bcbd22" name="/raw_signal_topic/data[7]"/>
+       <curve color="#1f77b4" name="/raw_signal_topic/data[8]"/>
+       <curve color="#d62728" name="/raw_signal_topic/data[9]"/>
       </plot>
      </DockArea>
      <DockArea name="...">
       <plot flip_y="false" style="Lines" flip_x="false" mode="TimeSeries">
        <range bottom="44.250000" top="117.750000" right="98.746679" left="0.000000"/>
        <limitY/>
-       <curve color="#1ac938" name="/line_topic/data[10]"/>
-       <curve color="#ff7f0e" name="/line_topic/data[11]"/>
-       <curve color="#f14cc1" name="/line_topic/data[12]"/>
-       <curve color="#9467bd" name="/line_topic/data[13]"/>
-       <curve color="#17becf" name="/line_topic/data[14]"/>
+       <curve color="#1ac938" name="/raw_signal_topic/data[10]"/>
+       <curve color="#ff7f0e" name="/raw_signal_topic/data[11]"/>
+       <curve color="#f14cc1" name="/raw_signal_topic/data[12]"/>
+       <curve color="#9467bd" name="/raw_signal_topic/data[13]"/>
+       <curve color="#17becf" name="/raw_signal_topic/data[14]"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -118,7 +118,7 @@
    <max_array_size value="100"/>
    <boolean_strings_to_number value="true"/>
    <remove_suffix_from_strings value="true"/>
-   <selected_topics value="/groundT_topic;/line_topic;/touch_propability_topic"/>
+   <selected_topics value="/groundT_topic;/raw_signal_topic;/force_estimation_topic"/>
   </plugin>
   <plugin ID="UDP Server"/>
   <plugin ID="WebSocket Server"/>

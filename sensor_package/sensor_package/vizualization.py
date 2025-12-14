@@ -12,7 +12,7 @@ class MinimalSubscriber(Node):
     def __init__(self):
         super().__init__('minimal_subscriber')
         
-        self.subscription1 = self.create_subscription(Float32MultiArray, 'touch_propability_topic', self.listener_callback1, 1)
+        self.subscription1 = self.create_subscription(Float32MultiArray, 'force_estimation_topic', self.listener_callback1, 1)
         self.subscription2 = self.create_subscription(Float32MultiArray, 'groundT_topic', self.listener_callback3, 1)
         
         path_areas="/home/papaveneti/ros_ws/src/sensor_package/sensor_package/Visualization/Patches.pkl"
@@ -113,7 +113,7 @@ class MinimalSubscriber(Node):
         self.ax2.set_xlabel("Time (s)")
         self.ax2.set_ylabel("Force (g)")
         self.ax2.grid(True)
-        self.ax2.legend()
+        self.ax2.legend(loc="upper right", frameon=True)
         self.ax2.set_ylim([0,650.0])
 
         # redraw
