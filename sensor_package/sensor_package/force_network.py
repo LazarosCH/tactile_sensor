@@ -23,10 +23,10 @@ class MinimalSubscriber(Node):
             1
         )
 
-        self.Scale = 700
+        self.Scale = 550
         self.buffer = []
         self.model = keras.models.load_model(f"/home/papaveneti/ros_ws/src/sensor_package/sensor_package/config/combined_model.keras")
-        self.time_steps = 5
+        self.time_steps = 10
         self.dims = 15
         self.scalers = []
         for i in range(15):
@@ -79,6 +79,9 @@ class MinimalSubscriber(Node):
             y_pred = self.model.predict(X_inputs)
             # y_pred_scaled = [float(y[0][0])*self.Scale for y in y_pred]
             y_pred_scaled = [(float(y[0][0]) -xm) * k * self.Scale for y, k, xm in zip(y_pred, self.Ki, self.Xmean)]
+
+            # Mageirema
+            y_pred_scaled[9] = (y_pred_scaled[4] + y_pred_scaled[14])/2.0
 
             msg_out = Float32MultiArray()
             msg_out.data = y_pred_scaled  # Flatten in case y_pred is multi-dimensional

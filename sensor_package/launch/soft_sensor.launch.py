@@ -31,13 +31,13 @@ def generate_launch_description():
             executable='vizualization',
             name='vizualization'
         ),
-        Node(
-        package="plotjuggler",
-        executable="plotjuggler",
-        output="screen",
-        emulate_tty=True,
-        arguments=['-l', plotjuggler_config_file]
-        ),
+        # Node(
+        # package="plotjuggler",
+        # executable="plotjuggler",
+        # output="screen",
+        # emulate_tty=True,
+        # arguments=['-l', plotjuggler_config_file]
+        # ),
 
 
         # TimerAction(

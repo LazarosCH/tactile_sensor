@@ -31,7 +31,7 @@ class MinimalSubscriber(Node):
         # Flags to track fresh data
         self.new_Forces  = False
         self.new_gt = False
-        self.scale_force = 700
+        self.scale_force = 550
         self.samples = 50
 
         plt.ion()
@@ -49,6 +49,10 @@ class MinimalSubscriber(Node):
         self.sum = 0.0
         self.sum_r = 0.0
         self.sum_l = 0.0
+        self.thresholds = [20.,20.,20.,20.,50.,
+                           20.,20.,20.,20.,20.,
+                           20.,20.,20.,50.,20.]
+
 
     def listener_callback3(self, msg):
         self.GT = np.array(msg.data)[0]
@@ -56,6 +60,9 @@ class MinimalSubscriber(Node):
 
     def listener_callback1(self, msg):
         self.Forces = np.array(msg.data)
+        for i in range(15):
+            if self.Forces[i] < self.thresholds[i]:
+                self.Forces[i] = 0.0
         self.sum = np.sum(self.Forces[[1,2,3,6,7,8,11,12,13]])
         self.sum_r = np.sum(self.Forces[[0,5,10]])
         self.sum_l = np.sum(self.Forces[[4,9,14]])
@@ -76,8 +83,11 @@ class MinimalSubscriber(Node):
         # Draw datasets with updated alpha
         for i, (xi, yi) in enumerate(self.patches):
             self.ax.plot(xi, yi, color='black', linewidth=1)
-            alpha = float(np.clip(self.Forces[i]/self.scale_force, 0.0, 1.0))
-            self.ax.fill(xi, yi, color='red', alpha=alpha)
+            if self.Forces[i] > self.thresholds[i]:
+                alpha = float(np.clip(self.Forces[i]/self.scale_force, 0.0, 1.0))
+                self.ax.fill(xi, yi, color='red', alpha=alpha)
+            else:
+                self.ax.fill(xi, yi, color='green', alpha=1.0)
 
         self.ax.text(-0.35, 4.2, f"F={self.sum:.1f}g", fontsize=16, color='black')
         self.ax.text(-2.25, 4.2, f"F={self.sum_l:.1f}g", fontsize=16, color='black')
