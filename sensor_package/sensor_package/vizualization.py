@@ -50,12 +50,16 @@ class MinimalSubscriber(Node):
         self.sum_r = 0.0
         self.sum_l = 0.0
         self.thresholds = [20.,20.,20.,20.,50.,
-                           20.,20.,20.,20.,20.,
-                           20.,20.,20.,50.,20.]
+                           20.,20.,20.,20.,50.,
+                           25.,20.,20.,50.,20.]
+        self.power_factor = [0.6,0.6,0.4,0.6,0.6,
+                             0.6,0.6,0.6,0.6,0.6,
+                             0.6,0.6,0.6,0.6,0.6,]
+        self.force_factor = 9.81/1000.0
 
 
     def listener_callback3(self, msg):
-        self.GT = np.array(msg.data)[0]
+        self.GT = np.array(msg.data)[0]*self.force_factor 
         self.new_gt = True
 
     def listener_callback1(self, msg):
@@ -63,9 +67,9 @@ class MinimalSubscriber(Node):
         for i in range(15):
             if self.Forces[i] < self.thresholds[i]:
                 self.Forces[i] = 0.0
-        self.sum = np.sum(self.Forces[[1,2,3,6,7,8,11,12,13]])
-        self.sum_r = np.sum(self.Forces[[0,5,10]])
-        self.sum_l = np.sum(self.Forces[[4,9,14]])
+        self.sum = np.sum(self.Forces[[1,2,3,6,7,8,11,12,13]])*self.force_factor 
+        self.sum_r = np.sum(self.Forces[[0,5,10]])*self.force_factor 
+        self.sum_l = np.sum(self.Forces[[4,9,14]])*self.force_factor 
         self.new_Forces = True
 
     def update_plot(self):
@@ -84,14 +88,14 @@ class MinimalSubscriber(Node):
         for i, (xi, yi) in enumerate(self.patches):
             self.ax.plot(xi, yi, color='black', linewidth=1)
             if self.Forces[i] > self.thresholds[i]:
-                alpha = float(np.clip(self.Forces[i]/self.scale_force, 0.0, 1.0))
+                alpha = float(np.clip(np.power( self.Forces[i]/self.scale_force, self.power_factor[i]) , 0.0, 1.0))
                 self.ax.fill(xi, yi, color='red', alpha=alpha)
             else:
                 self.ax.fill(xi, yi, color='green', alpha=1.0)
 
-        self.ax.text(-0.35, 4.2, f"F={self.sum:.1f}g", fontsize=16, color='black')
-        self.ax.text(-2.25, 4.2, f"F={self.sum_l:.1f}g", fontsize=16, color='black')
-        self.ax.text( 1.55, 4.2, f"F={self.sum_r:.1f}g", fontsize=16, color='black')
+        self.ax.text(-0.35, 4.2, f"F={self.sum :.1f}N", fontsize=16, color='black')
+        self.ax.text(-2.25, 4.2, f"F={self.sum_l :.1f}N", fontsize=16, color='black')
+        self.ax.text( 1.55, 4.2, f"F={self.sum_r :.1f}N", fontsize=16, color='black')
 
         for i, (xi, yi) in enumerate(self.fingers):
             self.ax.plot(xi, yi, color='black', linewidth=1.5)
@@ -114,17 +118,17 @@ class MinimalSubscriber(Node):
             self.force_history_r = self.force_history_r[-self.samples:]
             self.gt_history = self.gt_history[-self.samples:]
 
-        self.ax2.plot(self.time_history, self.force_history, linewidth=2, label="Front Face Force")
+        self.ax2.plot(self.time_history, self.force_history , linewidth=2, label="Front Face Force")
         # self.ax2.plot(self.time_history, self.force_history_l, linewidth=2, label="Left Face Force")
         # self.ax2.plot(self.time_history, self.force_history_r, linewidth=2, label="Right Face Force")
-        self.ax2.plot(self.time_history, self.gt_history, linewidth=2, linestyle="--", label="Ground Truth")
-        self.ax2.axhline(y=500, color="red", linestyle="--", linewidth=2,  label="Load Cell Limit / Node limit")
+        self.ax2.plot(self.time_history, self.gt_history , linewidth=2, linestyle="--", label="Ground Truth")
+        self.ax2.axhline(y=500*self.force_factor , color="red", linestyle="--", linewidth=2,  label="Load Cell Limit / Node limit")
         self.ax2.set_title("Force vs Time")
         self.ax2.set_xlabel("Time (s)")
-        self.ax2.set_ylabel("Force (g)")
+        self.ax2.set_ylabel("Force (N)")
         self.ax2.grid(True)
         self.ax2.legend(loc="upper right", frameon=True)
-        self.ax2.set_ylim([0,650.0])
+        self.ax2.set_ylim([0,650.0*self.force_factor ])
 
         # redraw
         self.fig.canvas.draw()
